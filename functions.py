@@ -1,6 +1,7 @@
 import os
 import dotenv
 import requests
+import json
 from datetime import datetime
 from openai import OpenAI
 from reportlab.pdfgen import canvas
@@ -75,6 +76,30 @@ def validador_data(data: str) -> bool:
             return aux
 
 
+def gpt_ask(pergunta: str) -> str:
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    resposta = client.chat.completions.create(model="gpt-3.5-turbo",
+                                              temperature=0.7,
+                                              messages=[
+                                                  {
+                                                      "role": "system",
+                                                      "content": "Você é um assistente virtual de um hospital, você "
+                                                                 "receberá a idade, o sexo, os sintomas, a duração "
+                                                                 "desses sintomas, as alergias e os medicamentos em uso"
+                                                                 " do paciente. Com base nisso, deve retornar apenas "
+                                                                 "uma string com as possiveis doenças separadas por "
+                                                                 "espaço e vírgula, sem avisos, nem introdução. Nem "
+                                                                 "titulo, apenas as três doenças captalizadas"
+                                                  },
+                                                  {
+                                                      "role": "user",
+                                                      "content": pergunta
+                                                  }
+                                              ])
+    return resposta.choices[0].message.content
+
+
 def create_pdf(lista):
     informa = {
         "Nome Completo": lista[0],
@@ -105,25 +130,27 @@ def create_pdf(lista):
     print("Ficha PDF gerada com sucesso.")
 
 
-def gpt_ask(pergunta: str) -> str:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medicacao, suspeitas):
+    # Carregar dados existentes do arquivo JSON
+    with open('usuarios.json', 'r') as arquivo:
+        dados = json.load(arquivo)
+    # Adicionar novo usuário
+    novo_usuario = {
+        'nome': nome,
+        'cpf': cpf,
+        'idade': idade,
+        'sexo': sexo,
+        'sintomas': sintomas,
+        'duração': duracao,
+        'alergias': alergias,
+        'medicação': medicacao,
+        'suspeitas': suspeitas,
+        "Data de atendimento": datetime.now().date(),
+        "Horário de atendimento": f"{datetime.now().time()}".split(".")[0]
+    }
 
-    resposta = client.chat.completions.create(model="gpt-3.5-turbo",
-                                              temperature=0.7,
-                                              messages=[
-                                                  {
-                                                      "role": "system",
-                                                      "content": "Você é um assistente virtual de um hospital, você "
-                                                                 "receberá a idade, o sexo, os sintomas, a duração "
-                                                                 "desses sintomas, as alergias e os medicamentos em uso"
-                                                                 " do paciente. Com base nisso, deve retornar apenas "
-                                                                 "uma string com as possiveis doenças separadas por "
-                                                                 "espaço e vírgula, sem avisos, nem introdução. Nem "
-                                                                 "titulo, apenas as três doenças captalizadas"
-                                                  },
-                                                  {
-                                                      "role": "user",
-                                                      "content": pergunta
-                                                  }
-                                              ])
-    return resposta.choices[0].message.content
+    dados.append(novo_usuario)
+
+    # Salvar dados atualizados de volta ao arquivo JSON
+    with open('usuarios.json', 'w') as arquivo:
+        json.dump(dados, arquivo, indent=4)

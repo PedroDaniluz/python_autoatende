@@ -51,3 +51,6 @@ userdata = (f"Idade: {data_dict['Idade']}\nSexo: {data_dict['Sexo']}\nSintomas: 
 
 create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas, duracao, alergico,
             medicacao, gpt_ask(userdata)])
+
+adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas, duracao,
+                  alergico, medicacao, gpt_ask(userdata))

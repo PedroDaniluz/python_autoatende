@@ -1,6 +1,6 @@
 import os
 
-# Caminho completo para o executável do Python
+# Caminho para o executável do Python
 python_executable = "python" if os.name == 'nt' else "python3"
 
 # Criação do ambiente virtual
@@ -12,7 +12,7 @@ if os.name == 'nt':
 else:
     os.system("source venv/bin/activate")
 
-# Certifique-se de que o ambiente virtual está ativado antes de instalar pacotes
+# Instalar os pacotes
 os.system(f"{python_executable} -m pip install requests")
 os.system(f"{python_executable} -m pip install datetime")
 os.system(f"{python_executable} -m pip install python-dotenv")

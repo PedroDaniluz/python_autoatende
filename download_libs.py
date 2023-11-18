@@ -1,21 +1,26 @@
 import os
 
-# Caminho para o executável do Python
-python_executable = "python" if os.name == 'nt' else "python3"
+'''
+COMO RODAR O PROGRAMA?
 
-# Criação do ambiente virtual
-os.system(f"{python_executable} -m venv venv")
+*MacOS ou Linux:
+-- Navegue até o diretório do programa
+-- Digite no terminal os seguintes comandos:
+    python3 -m venv venv
+    source venv/bin/activate
+    python3 download_libs.py
+    python3 main.py
 
-# Ativação do ambiente virtual (verifique o sistema operacional)
-if os.name == 'nt':
-    os.system("venv\\Scripts\\activate")
-else:
-    os.system("source venv/bin/activate")
+*Windows:
+-- Navegue até o diretório do programa
+-- digite no terminal os seguintes comandos:
+    python -m venv venv
+    venv\\Scripts\\activate
+    python download_libs.py
+    python main.py
+'''
 
-# Instalar os pacotes
-os.system(f"{python_executable} -m pip install requests")
-os.system(f"{python_executable} -m pip install datetime")
-os.system(f"{python_executable} -m pip install python-dotenv")
-os.system(f"{python_executable} -m pip install openai")
-os.system(f"{python_executable} -m pip install reportlab")
-os.system(f"{python_executable} -m pip install pypdf")
+pacotes = ['requests', 'datetime', 'python-dotenv', 'openai', 'reportlab', 'pypdf']
+
+for a in pacotes:
+    os.system(f"pip install {a}")

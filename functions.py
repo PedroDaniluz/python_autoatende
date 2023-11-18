@@ -145,7 +145,7 @@ def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medic
         'alergias': alergias,
         'medicação': medicacao,
         'suspeitas': suspeitas,
-        "Data de atendimento": datetime.now().date(),
+        "Data de atendimento": f"{datetime.now().date()}",
         "Horário de atendimento": f"{datetime.now().time()}".split(".")[0]
     }
 

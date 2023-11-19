@@ -132,19 +132,19 @@ def create_pdf(lista):
 
 def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medicacao, suspeitas):
     # Carregar dados existentes do arquivo JSON
-    with open('usuarios.json', 'r') as arquivo:
+    with open('usuarios.json', 'r', encoding='utf-8') as arquivo:
         dados = json.load(arquivo)
     # Adicionar novo usuário
     novo_usuario = {
-        'nome': nome,
-        'cpf': cpf,
-        'idade': idade,
-        'sexo': sexo,
-        'sintomas': sintomas,
-        'duração': duracao,
-        'alergias': alergias,
-        'medicação': medicacao,
-        'suspeitas': suspeitas,
+        'Nome': nome,
+        'CPF': cpf,
+        'Idade': idade,
+        'Sexo': sexo,
+        'Sintomas': sintomas,
+        'Duração': duracao,
+        'Alergias': alergias,
+        'Medicação': medicacao,
+        'Suspeitas': suspeitas,
         "Data de atendimento": f"{datetime.now().date()}",
         "Horário de atendimento": f"{datetime.now().time()}".split(".")[0]
     }
@@ -152,5 +152,5 @@ def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medic
     dados.append(novo_usuario)
 
     # Salvar dados atualizados de volta ao arquivo JSON
-    with open('usuarios.json', 'w') as arquivo:
-        json.dump(dados, arquivo, indent=4)
+    with open('usuarios.json', 'w', encoding='utf-8') as arquivo:
+        json.dump(dados, arquivo, indent=4, ensure_ascii=False)

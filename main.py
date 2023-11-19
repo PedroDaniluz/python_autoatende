@@ -76,7 +76,9 @@ while True:
             while opt.upper() not in ["SIM", "NAO", "NÃO", "S", "N"]:
                 opt = input("Opção inválida. Deseja prosseguir? (S)im ou (N)ão? ")
             if opt.upper() in ["SIM", "S"]:
-                senha = input("Digite sua senha: ")
+                senha = input("Digite sua senha ('N' para sair): ")
+                while senha != "admin" and senha.upper() not in ["N", "NAO", "NÃO"]:
+                        senha = input("Senha incorreta! Tente novamente ('N' para sair): ")
                 if senha == 'admin':
                     while True:
                         with open("usuarios.json", "r", encoding='utf-8') as file:
@@ -105,6 +107,4 @@ while True:
                                 voltar = input("Opção inválida. Deseja prosseguir? (S)im ou (N)ão? ")
                             if voltar.upper() in ["N", "NAO", "NÃO"]:
                                 break
-            else:
-                print("Senha incorreta. Voltando ao menu inicial.")
-                break
+                            

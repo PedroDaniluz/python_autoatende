@@ -11,25 +11,43 @@
 
 <p>
     Encontre o diretório do script e digite os seguintes comandos:<br>
-    Digite os comandos em ordem na primeira execução.<br>
-    Posteriormente, pode-se executar apenas o ultimo comando.
+    Digite os comandos em ordem ~apenas uma vez para configurar.<br>
 </p>
 
 <h4 style="color: purple">MacOS e Linux:</h4>
 
-<p style="color: green">
+<p style="color: aquamarine">
     $ python3 -m venv venv<br>
     $ source venv/bin/activate<br>
     $ python3 download_libs.py<br>
+</p>
+
+<h4 style="color: purple">Windows:</h4>
+
+<p style="color: aquamarine">
+    $ python -m venv venv<br>
+    $ venv\\Scripts\\activate<br>
+    $ python download_libs.py<br>
+</p>
+
+<h3 style="color: darkgreen">Como rodar o script?</h3>
+
+<p>
+    Após realizar as configurações iniciais:<br>
+    Encontre o diretório do script e digite os seguintes comandos:<br>
+</p>
+
+<h4 style="color: purple">MacOS e Linux:</h4>
+
+<p style="color: aquamarine">
+    $ source venv/bin/activate<br>
     $ python3 main.py
 </p>
 
 <h4 style="color: purple">Windows:</h4>
 
-<p style="color: green">
-    $ python -m venv venv<br>
+<p style="color: aquamarine">
     $ venv\\Scripts\\activate<br>
-    $ python download_libs.py<br>
     $ python main.py
 </p>
 

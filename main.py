@@ -79,32 +79,6 @@ while True:
                 senha = input("Digite sua senha ('N' para sair): ")
                 while senha != "admin" and senha.upper() not in ["N", "NAO", "NÃO"]:
                         senha = input("Senha incorreta! Tente novamente ('N' para sair): ")
-                if senha == 'admin':
-                    while True:
-                        with open("usuarios.json", "r", encoding='utf-8') as file:
-                            usuarios = json.load(file)
-                        pesquisa = input("Digite o nome do paciente: ")
-                        aux = False
-                        i = 0
-                        for i in range(len(usuarios)):
-                            if pesquisa.upper() == usuarios[i]['Nome'].upper():
-                                aux = True
-                                break
-                        if aux:
-                            limpar()
-                            input(f'Nome: {usuarios[i]['Nome']}\nCPF: {usuarios[i]['CPF']}\n'
-                                  f'Idade: {usuarios[i]['Idade']}\nSexo: {usuarios[i]['Sexo']}\n'
-                                  f'Sintomas: {usuarios[i]['Sintomas']}\nDuração: {usuarios[i]['Duração']}\n'
-                                  f'Alergias: {usuarios[i]['Alergias']}\nMedicações: {usuarios[i]['Medicação']}\n'
-                                  f'Suspeitas: {usuarios[i]['Suspeitas']}\n'
-                                  f'Data de atendimento: {usuarios[i]['Data de atendimento']}\n'
-                                  f'Horário de atendimento: {usuarios[i]['Horário de atendimento']}\n'
-                                  f'Aperte qualquer tecla para prosseguir...')
-                        else:
-                            limpar()
-                            voltar = input("Usuário não encontrado, deseja tentar novamente? (S)im ou (N)ão? ")
-                            while voltar.upper() not in ["SIM", "NAO", "NÃO", "S", "N"]:
-                                voltar = input("Opção inválida. Deseja prosseguir? (S)im ou (N)ão? ")
-                            if voltar.upper() in ["N", "NAO", "NÃO"]:
-                                break
+                if senha == "admin":
+                    buscar_usuario("usuarios.json")
                             

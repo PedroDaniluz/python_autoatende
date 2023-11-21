@@ -22,6 +22,7 @@ def formatar_sexo(sexo: str) -> str:
 
 
 def formatar_nome(nome: str) -> str:
+    # Captalizar as partes do nome
     nome_split = nome.split(" ")
     for i in range(len(nome_split)):
         nome_split[i] = nome_split[i].capitalize()
@@ -29,6 +30,7 @@ def formatar_nome(nome: str) -> str:
 
 
 def consultar_cpf(cpf: str, nasc: str) -> dict:
+    # Consultar CPF e data de nascimento com a API da receita federal
     print("\nBuscando...")
     token = os.getenv("CPF_API_KEY")
     url = "https://www.sintegraws.com.br/api/v1/execute-api.php"
@@ -52,6 +54,7 @@ def consultar_cpf(cpf: str, nasc: str) -> dict:
 
 
 def validador_data(data: str) -> bool:
+    # Validar a data inserida
     if len(data) == 8 and len(data.split("/")) == 1:
         data = f"{data[:2]}/{data[2:4]}/{data[4:]}"
     data_split = data.split("/")
@@ -77,6 +80,7 @@ def validador_data(data: str) -> bool:
 
 
 def gpt_ask(pergunta: str) -> str:
+    # Mandar o request para o chatGPT
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     resposta = client.chat.completions.create(model="gpt-3.5-turbo",
@@ -90,7 +94,10 @@ def gpt_ask(pergunta: str) -> str:
                                                                  " do paciente. Com base nisso, deve retornar apenas "
                                                                  "uma string com as possiveis doenças separadas por "
                                                                  "espaço e vírgula, sem avisos, nem introdução. Nem "
-                                                                 "titulo, apenas as três doenças captalizadas"
+                                                                 "titulo, apenas as três doenças captalizadas. Em PTBR"
+                                                                 "Por exemplo:"
+                                                                 "user: Dor de cabeça, dor nos olhos"
+                                                                 "return: Enxaqueca, Sinusite, Cansaço"
                                                   },
                                                   {
                                                       "role": "user",
@@ -157,6 +164,7 @@ def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medic
 
 
 def buscar_usuario(doc: str) -> None:
+    # Procura o usuário a partir do seu CPF no arquivo JSON
     while True:
         with open(doc, "r", encoding='utf-8') as file:
             usuarios = json.load(file)

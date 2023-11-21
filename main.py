@@ -35,7 +35,7 @@ while True:
                     nascimento = input("Data inválida, insira sua data de nascimento no formato dd/mm/aaaa ou "
                                        "ddmmaaaa: ")
                 nascimento = nascimento.replace('/', '')
-
+                # Verificar se o CPF e a data de nascimento constam na Receita Federal
                 data_dict = consultar_cpf(cpf, nascimento)
                 if data_dict['Situação'] == 'OK':
                     break
@@ -62,14 +62,18 @@ while True:
             input("Pronto! Vou te encaminhar para a próxima etapa com os nossos profissionais! "
                   "Pressione qualquer tecla...")
 
+            # Cria texto com as informações para a IA
             userdata = (f"Idade: {data_dict['Idade']}\nSexo: {data_dict['Sexo']}\nSintomas: {sintomas}\n"
                         f"Duração: {duracao}\n Alergias: {alergico}\n Medicamento em uso: {medicacao}")
+            
+            print("\nSalvando...")
+            suspeitas = gpt_ask(userdata)
 
             create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas, duracao,
-                        alergico, medicacao, gpt_ask(userdata)])
+                        alergico, medicacao, suspeitas])
 
             adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas,
-                              duracao, alergico, medicacao, gpt_ask(userdata))
+                              duracao, alergico, medicacao, suspeitas)
         case 2:
             limpar()
             opt = input("Essa é uma função exclusiva de administradores! Deseja prosseguir? (S)im ou (N)ão? ")

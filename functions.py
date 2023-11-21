@@ -160,22 +160,25 @@ def buscar_usuario(doc: str) -> None:
     while True:
         with open(doc, "r", encoding='utf-8') as file:
             usuarios = json.load(file)
-        pesquisa = input("Digite o nome do paciente: ")
+        pesquisa = input("Digite o CPF do paciente: ")
+        while len(pesquisa) != 11:
+                    pesquisa = input("CPF inválido, por favor, insira apenas os números: ")
         aux = False
-        i = 0
+        ind = 0
+        pesquisa = f"{pesquisa[:3]}.{pesquisa[3:6]}.{pesquisa[6:9]}-{pesquisa[9:]}"
         for i in range(len(usuarios)):
-            if pesquisa.upper() == usuarios[i]["Nome"].upper():
+            if pesquisa == usuarios[i]["CPF"]:
                 aux = True
-                break
+                ind = i
         if aux:
             limpar()
-            input(f'Nome: {usuarios[i]["Nome"]}\nCPF: {usuarios[i]["CPF"]}\n'
-                    f'Idade: {usuarios[i]["Idade"]}\nSexo: {usuarios[i]["Sexo"]}\n'
-                    f'Sintomas: {usuarios[i]["Sintomas"]}\nDuração: {usuarios[i]["Duração"]}\n'
-                    f'Alergias: {usuarios[i]["Alergias"]}\nMedicações: {usuarios[i]["Medicação"]}\n'
-                    f'Suspeitas: {usuarios[i]["Suspeitas"]}\n'
-                    f'Data de atendimento: {usuarios[i]["Data de atendimento"]}\n'
-                    f'Horário de atendimento: {usuarios[i]["Horário de atendimento"]}\n'
+            input(f'Nome: {usuarios[ind]["Nome"]}\nCPF: {usuarios[ind]["CPF"]}\n'
+                    f'Idade: {usuarios[ind]["Idade"]}\nSexo: {usuarios[ind]["Sexo"]}\n'
+                    f'Sintomas: {usuarios[ind]["Sintomas"]}\nDuração: {usuarios[ind]["Duração"]}\n'
+                    f'Alergias: {usuarios[ind]["Alergias"]}\nMedicações: {usuarios[ind]["Medicação"]}\n'
+                    f'Suspeitas: {usuarios[ind]["Suspeitas"]}\n'
+                    f'Data de atendimento: {usuarios[ind]["Data de atendimento"]}\n'
+                    f'Horário de atendimento: {usuarios[ind]["Horário de atendimento"]}\n'
                     f'Aperte qualquer tecla para prosseguir...')
             break
         else:

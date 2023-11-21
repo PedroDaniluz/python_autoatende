@@ -55,9 +55,9 @@
 
 <p>
     No menu inicial, escolha uma dos opções:<br><br>
-    1. Ao iniciar o atendimento você deve iserir um CPF e uma data de nascimento<br>
+    1. Ao iniciar o atendimento você deve inserir um CPF e uma data de nascimento<br>
     válidas; e responder algumas perguntas no terminal. Com isso, o programa irá<br>
-    gerar uma ficha com os seus dados e salvá-los no arquivo json.<br><br>
+    gerar uma ficha PDF com os seus dados e salvá-los no arquivo json.<br><br>
     2. Ao consultar os usuários você deve inserir a senha <b>'admin'</b>, para poder<br>
     pesquisar os dados de usuários no sistema, a partir do nome.
 </p>

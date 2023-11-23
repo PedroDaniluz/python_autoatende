@@ -39,6 +39,7 @@ def consultar_cpf(cpf: str, nasc: str) -> dict:
     response = requests.request("GET", url, params=querystring)
 
     data = response.json()
+    print(data['message'])
     if data['code'] == '0':
         return {
             'Situação': 'OK',

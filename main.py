@@ -33,14 +33,20 @@ while True:
                 # Validar entrada: Nascimento
                 while not validador_data(nascimento):
                     nascimento = input("Data inválida, insira sua data de nascimento no formato dd/mm/aaaa ou "
-                                       "ddmmaaaa: ")
-                nascimento = nascimento.replace('/', '')
+                                        "ddmmaaaa: ")
+
                 # Verificar se o CPF e a data de nascimento constam na Receita Federal
                 data_dict = consultar_cpf(cpf, nascimento)
                 if data_dict['Situação'] == 'OK':
                     break
                 else:
                     input("Os dados inseridos são inválidos! Tente novamente...")
+            
+            limpar()
+            sexo = input("Qual o seu sexo biológico ('M' para masculino ou 'F' para feminino): ")
+            while sexo.upper() not in ['M', 'F']:
+                sexo = input("Digite apenas 'M' para masculino ou 'F' para feminino: ")
+            sexo = formatar_sexo(sexo)
 
             limpar()
             sintomas = input("Quais são os seus sintomas? ")
@@ -63,16 +69,16 @@ while True:
                   "Pressione qualquer tecla...")
 
             # Cria texto com as informações para a IA
-            userdata = (f"Idade: {data_dict['Idade']}\nSexo: {data_dict['Sexo']}\nSintomas: {sintomas}\n"
+            userdata = (f"Idade: {data_dict['Idade']}\nSexo: {sexo}\nSintomas: {sintomas}\n"
                         f"Duração: {duracao}\n Alergias: {alergico}\n Medicamento em uso: {medicacao}")
             
             print("\nSalvando...")
             suspeitas = gpt_ask(userdata)
 
-            create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas, duracao,
+            create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], sexo, sintomas, duracao,
                         alergico, medicacao, suspeitas])
 
-            adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas,
+            adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], sexo, sintomas,
                               duracao, alergico, medicacao, suspeitas)
         case 2:
             limpar()

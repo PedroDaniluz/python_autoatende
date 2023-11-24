@@ -2,7 +2,7 @@ import os
 import dotenv
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, date
 from openai import OpenAI
 from reportlab.pdfgen import canvas
 from pypdf import PdfWriter, PdfReader
@@ -29,31 +29,6 @@ def formatar_nome(nome: str) -> str:
     return " ".join(nome_split)
 
 
-def consultar_cpf(cpf: str, nasc: str) -> dict:
-    # Consultar CPF e data de nascimento com a API da receita federal
-    print("\nBuscando...")
-    token = os.getenv("CPF_API_KEY")
-    url = "https://www.sintegraws.com.br/api/v1/execute-api.php"
-    querystring = {"token": token, "cpf": f"{cpf}", "data-nascimento": f"{nasc}", "plugin": "CPF"}
-
-    response = requests.request("GET", url, params=querystring)
-
-    data = response.json()
-    print(data['message'])
-    if data['code'] == '0':
-        return {
-            'Situação': 'OK',
-            'Nome': formatar_nome(data['nome']),
-            'Sexo': formatar_sexo(data['genero']),
-            'CPF': data['cpf'],
-            'Idade': data['idade']
-        }
-    else:
-        return {
-            'Situação': 'ERRO',
-        }
-
-
 def validador_data(data: str) -> bool:
     # Validar a data inserida
     if len(data) == 8 and len(data.split("/")) == 1:
@@ -61,8 +36,6 @@ def validador_data(data: str) -> bool:
     data_split = data.split("/")
     ano = datetime.now().year
     if len(data_split) != 3:
-        print(data)
-        print(data_split)
         return False
     else:
         if not data_split[0].isnumeric() or len(data_split[0]) != 2 or not 1 <= int(data_split[0]) <= 31:
@@ -78,6 +51,47 @@ def validador_data(data: str) -> bool:
             except ValueError:
                 aux = False
             return aux
+
+
+def calcular_idade(nasc: str):
+    if len(nasc) == 8 and len(nasc.split("/")) == 1:
+        nasc = f"{nasc[:2]}/{nasc[2:4]}/{nasc[4:]}"
+    dia, mes, ano = nasc.split('/')[0], nasc.split('/')[1], nasc.split('/')[2]
+    nasc = date(day=int(dia), month= int(mes), year=int(ano))
+    data_atual = date.today()
+    idade = data_atual.year - nasc.year - ((data_atual.month, data_atual.day) < (nasc.month, nasc.day))
+ 
+    return idade
+
+
+def consultar_cpf(cpf: str, nasc: str) -> dict:
+    if len(nasc) == 8 and len(nasc.split("/")) == 1:
+        nasc = f"{nasc[:2]}/{nasc[2:4]}/{nasc[4:]}"
+    # Consultar CPF e data de nascimento com a API da receita federal
+    print("\nBuscando...")
+    token = os.getenv("CPF_API_KEY2")
+    url = "http://ws.hubdodesenvolvedor.com.br/v2/cpf/"
+    params = {
+    "cpf": f"{cpf}",
+    "data": f"{nasc}",
+    "token": token
+}
+
+    response = requests.get(url, params=params)
+
+    data = response.json()
+    if data['return'] == 'OK':
+        return {
+            'Situação': 'OK',
+            'Nome': formatar_nome(data['result']['nome_da_pf']),
+            'CPF': f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}",
+            'Idade': calcular_idade(data['result']['data_nascimento'])
+        }
+    else:
+        print(f"Erro encontrado: {data['message']}")
+        return {
+            'Situação': 'ERRO',
+        }
 
 
 def gpt_ask(pergunta: str) -> str:

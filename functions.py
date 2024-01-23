@@ -2,7 +2,7 @@ import os
 import dotenv
 import requests
 import json
-from datetime import datetime, date
+from datetime import datetime
 from openai import OpenAI
 from reportlab.pdfgen import canvas
 from pypdf import PdfWriter, PdfReader
@@ -53,39 +53,25 @@ def validador_data(data: str) -> bool:
             return aux
 
 
-def calcular_idade(nasc: str):
-    if len(nasc) == 8 and len(nasc.split("/")) == 1:
-        nasc = f"{nasc[:2]}/{nasc[2:4]}/{nasc[4:]}"
-    dia, mes, ano = nasc.split('/')[0], nasc.split('/')[1], nasc.split('/')[2]
-    nasc = date(day=int(dia), month= int(mes), year=int(ano))
-    data_atual = date.today()
-    idade = data_atual.year - nasc.year - ((data_atual.month, data_atual.day) < (nasc.month, nasc.day))
- 
-    return idade
-
-
 def consultar_cpf(cpf: str, nasc: str) -> dict:
-    if len(nasc) == 8 and len(nasc.split("/")) == 1:
-        nasc = f"{nasc[:2]}/{nasc[2:4]}/{nasc[4:]}"
+    if len(nasc) != 8 and len(nasc.split("/")) == 3:
+        nasc = f"{nasc[:2]}{nasc[3:5]}{nasc[6:]}"
     # Consultar CPF e data de nascimento com a API da receita federal
     print("\nBuscando...")
-    token = os.getenv("CPF_API_KEY2")
-    url = "http://ws.hubdodesenvolvedor.com.br/v2/cpf/"
-    params = {
-    "cpf": f"{cpf}",
-    "data": f"{nasc}",
-    "token": token
-}
+    token = os.getenv("CPF_API_KEY")
+    url = "https://www.sintegraws.com.br/api/v1/execute-api.php"
+    querystring = {"token": f"{token}", "cpf": cpf, "data-nascimento": f"{nasc}", "plugin": "CPF"}
 
-    response = requests.get(url, params=params)
+    response = requests.request("GET", url, params=querystring)
 
     data = response.json()
-    if data['return'] == 'OK':
+    if data['code'] == '0':
         return {
             'Situação': 'OK',
-            'Nome': formatar_nome(data['result']['nome_da_pf']),
+            'Nome': formatar_nome(data['nome']),
             'CPF': f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}",
-            'Idade': calcular_idade(data['result']['data_nascimento'])
+            'Idade': data['idade'],
+            'Sexo': formatar_sexo(data['genero'])
         }
     else:
         print(f"Erro encontrado: {data['message']}")
@@ -185,7 +171,7 @@ def buscar_usuario(doc: str) -> None:
             usuarios = json.load(file)
         pesquisa = input("Digite o CPF do paciente: ")
         while len(pesquisa) != 11:
-                    pesquisa = input("CPF inválido, por favor, insira apenas os números: ")
+            pesquisa = input("CPF inválido, por favor, insira apenas os números: ")
         aux = False
         ind = 0
         pesquisa = f"{pesquisa[:3]}.{pesquisa[3:6]}.{pesquisa[6:9]}-{pesquisa[9:]}"
@@ -196,13 +182,13 @@ def buscar_usuario(doc: str) -> None:
         if aux:
             limpar()
             input(f'Nome: {usuarios[ind]["Nome"]}\nCPF: {usuarios[ind]["CPF"]}\n'
-                    f'Idade: {usuarios[ind]["Idade"]}\nSexo: {usuarios[ind]["Sexo"]}\n'
-                    f'Sintomas: {usuarios[ind]["Sintomas"]}\nDuração: {usuarios[ind]["Duração"]}\n'
-                    f'Alergias: {usuarios[ind]["Alergias"]}\nMedicações: {usuarios[ind]["Medicação"]}\n'
-                    f'Suspeitas: {usuarios[ind]["Suspeitas"]}\n'
-                    f'Data de atendimento: {usuarios[ind]["Data de atendimento"]}\n'
-                    f'Horário de atendimento: {usuarios[ind]["Horário de atendimento"]}\n'
-                    f'Aperte qualquer tecla para prosseguir...')
+                  f'Idade: {usuarios[ind]["Idade"]}\nSexo: {usuarios[ind]["Sexo"]}\n'
+                  f'Sintomas: {usuarios[ind]["Sintomas"]}\nDuração: {usuarios[ind]["Duração"]}\n'
+                  f'Alergias: {usuarios[ind]["Alergias"]}\nMedicações: {usuarios[ind]["Medicação"]}\n'
+                  f'Suspeitas: {usuarios[ind]["Suspeitas"]}\n'
+                  f'Data de atendimento: {usuarios[ind]["Data de atendimento"]}\n'
+                  f'Horário de atendimento: {usuarios[ind]["Horário de atendimento"]}\n'
+                  f'Aperte qualquer tecla para prosseguir...')
             break
         else:
             limpar()

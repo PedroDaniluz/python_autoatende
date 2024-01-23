@@ -33,7 +33,7 @@ while True:
                 # Validar entrada: Nascimento
                 while not validador_data(nascimento):
                     nascimento = input("Data inválida, insira sua data de nascimento no formato dd/mm/aaaa ou "
-                                        "ddmmaaaa: ")
+                                       "ddmmaaaa: ")
 
                 # Verificar se o CPF e a data de nascimento constam na Receita Federal
                 data_dict = consultar_cpf(cpf, nascimento)
@@ -41,12 +41,6 @@ while True:
                     break
                 else:
                     input("Os dados inseridos são inválidos! Tente novamente...")
-            
-            limpar()
-            sexo = input("Qual o seu sexo biológico ('M' para masculino ou 'F' para feminino): ")
-            while sexo.upper() not in ['M', 'F']:
-                sexo = input("Digite apenas 'M' para masculino ou 'F' para feminino: ")
-            sexo = formatar_sexo(sexo)
 
             limpar()
             sintomas = input("Quais são os seus sintomas? ")
@@ -69,16 +63,16 @@ while True:
                   "Pressione qualquer tecla...")
 
             # Cria texto com as informações para a IA
-            userdata = (f"Idade: {data_dict['Idade']}\nSexo: {sexo}\nSintomas: {sintomas}\n"
+            userdata = (f"Idade: {data_dict['Idade']}\nSexo: {data_dict['Sexo']}\nSintomas: {sintomas}\n"
                         f"Duração: {duracao}\n Alergias: {alergico}\n Medicamento em uso: {medicacao}")
             
             print("\nSalvando...")
             suspeitas = gpt_ask(userdata)
 
-            create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], sexo, sintomas, duracao,
+            create_pdf([data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas, duracao,
                         alergico, medicacao, suspeitas])
 
-            adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], sexo, sintomas,
+            adicionar_usuario(data_dict['Nome'], data_dict['CPF'], data_dict['Idade'], data_dict['Sexo'], sintomas,
                               duracao, alergico, medicacao, suspeitas)
         case 2:
             limpar()
@@ -88,7 +82,7 @@ while True:
             if opt.upper() in ["SIM", "S"]:
                 senha = input("Digite sua senha ('N' para sair): ")
                 while senha != "admin" and senha.upper() not in ["N", "NAO", "NÃO"]:
-                        senha = input("Senha incorreta! Tente novamente ('N' para sair): ")
+                    senha = input("Senha incorreta! Tente novamente ('N' para sair): ")
                 if senha == "admin":
                     buscar_usuario("usuarios.json")
                             

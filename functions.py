@@ -130,7 +130,7 @@ def create_pdf(lista):
         contlinhas += 20
     pdf.save()
     # trabalhando com segundo pdf:
-    stamp = PdfReader("template.pdf").pages[0]
+    stamp = PdfReader("aux/template.pdf").pages[0]
     writer = PdfWriter(clone_from=f"Paciente - {lista[0]}.pdf")
     for page in writer.pages:
         page.merge_page(stamp, over=False)
@@ -140,7 +140,7 @@ def create_pdf(lista):
 
 def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medicacao, suspeitas):
     # Carregar dados existentes do arquivo JSON
-    with open('usuarios.json', 'r', encoding='utf-8') as arquivo:
+    with open('aux/usuarios.json', 'r', encoding='utf-8') as arquivo:
         dados = json.load(arquivo)
     # Adicionar novo usuário
     novo_usuario = {
@@ -160,7 +160,7 @@ def adicionar_usuario(nome, cpf, idade, sexo, sintomas, duracao, alergias, medic
     dados.append(novo_usuario)
 
     # Salvar dados atualizados de volta ao arquivo JSON
-    with open('usuarios.json', 'w', encoding='utf-8') as arquivo:
+    with open('aux/usuarios.json', 'w', encoding='utf-8') as arquivo:
         json.dump(dados, arquivo, indent=4, ensure_ascii=False)
 
 

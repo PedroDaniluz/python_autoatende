@@ -7,6 +7,16 @@
     médico.
 </p>
 
+<h3 style="color: darkgreen">Requisitos</h3>
+
+<p>
+    Você precisará de dois tokens, das seguintes APIs:<br>
+    SINTEGRA WS (CPF): <a href="https://www.sintegraws.com.br/">https://www.sintegraws.com.br/</a><br>
+    OPEN AI: <a href="https://openai.com/blog/openai-api">https://openai.com/blog/openai-api</a><br>
+    <br>
+    Depois deverá inserir essas chaves em um arquivo .env no diretório principal
+</p>
+
 <h3 style="color: darkgreen">Como configurar o script?</h3>
 
 <p>
